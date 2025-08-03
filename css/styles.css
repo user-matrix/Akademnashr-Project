@@ -1,3 +1,10 @@
+body {
+    font-family: "Roboto", "Arial", sans-serif;
+    line-height: 1.5;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+}
+
 /* Header styles */
 .site-header {
     background-color: #fff;
@@ -47,6 +54,7 @@
     font-size: 40px;
     line-height: 1.2;
     letter-spacing: 0.5px;
+    font-family: "Roboto Condensed", "Roboto", "Arial", sans-serif;
 }
 
 .hero-text {    
@@ -66,6 +74,7 @@
     width: 440px;
     line-height: 1.2;
     letter-spacing: 0.5px;
+    font-family: "Roboto Condensed", "Robot", "Arial", sans-serif;
 }
 
 .feature {
@@ -137,6 +146,7 @@
 
 .site-footer-links {
     width: 224px;
+    line-height: 19px;
 }
 
 .site-footer-links a {
