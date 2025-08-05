@@ -13,6 +13,12 @@ body {
 /* Header styles */
 .site-header {
     background-color: #fff;
+    display: flex;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 5px solid #FF7500;
 }
 
 .logo-link {
@@ -30,6 +36,8 @@ body {
 /* Navbar styles */
 .site-nav-list {
     list-style-type: none;
+    display: flex;
+    padding: 0;
 }
 
 .site-nav-link {
@@ -54,9 +62,13 @@ body {
 
 /* Main link styles */
 .main-link {
+    display: inline-block;
     font-size: 13px;
     line-height: 15px;
+    padding: 12px 24px;
     color: #fff;
+    border-radius: 4px;
+    font-weight: bold;
     background-color: #FF7500;
     text-decoration: none;
     transition: opacity 0.4 ease;
@@ -72,6 +84,11 @@ body {
 
 /* Hero styles */
 .hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 80px;
+    padding-bottom: 80px;
     background-color: #252420;
     color: #fff;
 }
@@ -84,6 +101,7 @@ body {
     width: 80px;
     height: 3px;
     background-color: #FF7500;
+    border: none;
 }
 
 .hero-heading {
@@ -102,9 +120,15 @@ body {
 .hero-img {
     width: 510px;
     height: 510px;
+    border-radius: 8px;
 }
 
 /* Features styles */
+.features {
+    padding-top: 210px;
+    padding-bottom: 210px;
+}
+
 .features-heading {
     font-size: 72px;
     width: 440px;
@@ -113,14 +137,25 @@ body {
     font-family: "Roboto Condensed", "Robot", "Arial", sans-serif;
 }
 
+.features-list {
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
+    padding: 0;
+}
+
 .feature {
     width: 340px;
 }
 
 .feature-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100px;
     min-height: 100px;
     background-color: rgba(255, 117, 0, 0.2);
+    border-radius: 50%;
 }
 
 .feature-heading {
@@ -137,6 +172,10 @@ body {
 
 /* Promo styles */
 .promo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 12px;
     background-color: #252420;
     color: #fff;
 }
@@ -168,15 +207,19 @@ body {
 
 /* Footer styles */
 .site-footer {
+    padding-top: 56px;
+    padding-bottom: 56px;
     background-color: #F8F8F8;
 }
 
 .site-footer ul {
     list-style-type: none;
+    padding: 0;
 }
 
 .site-footer-socials {
     display: flex;
+    padding: 0;
     align-items: center;
 }
 
@@ -195,6 +238,7 @@ body {
 .site-footer-line {
     height: 3px;
     background-color: rgba(37, 36, 32, 0.5);
+    border: none;
 }
 
 .site-footer-links {
