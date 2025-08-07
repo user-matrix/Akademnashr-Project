@@ -107,6 +107,7 @@ body {
     line-height: 15px;
     padding: 12px 24px;
     color: #fff;
+    margin-top: -10px;
     border-radius: 4px;
     font-weight: bold;
     background-color: #FF7500;
@@ -285,6 +286,7 @@ body {
     width: 440px;
     height: 440px;
     object-fit: cover;
+    border-radius: 12px;
 }
 
 /* Footer styles */
