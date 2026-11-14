@@ -552,27 +552,6 @@ button {
   transform: translateX(24px);
 }
 
-.seg {
-  display: flex;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 14px;
-  background: rgba(0, 0, 0, 0.25);
-}
-
-.seg button {
-  border: none;
-  padding: 7px 10px;
-  border-radius: 10px;
-  background: transparent;
-  font-weight: 800;
-  font-size: 14px;
-}
-
-.seg button.on {
-  background: var(--blue);
-}
-
 .booster-hero {
   display: grid;
   place-items: center;
@@ -984,4 +963,34 @@ button {
 
 .skin-preview {
   display: block;
+}
+
+/* ------------------------------------------------------------------ language picker */
+
+.setting-row.lang-row {
+  border-bottom: none;
+  padding-bottom: 6px;
+}
+
+.lang-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 0 0 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.lang-grid button {
+  min-height: 40px;
+  padding: 6px 4px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.lang-grid button.on {
+  background: var(--blue);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25) inset;
 }

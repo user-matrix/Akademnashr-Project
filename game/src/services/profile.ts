@@ -1,6 +1,6 @@
 import { ECONOMY } from '../config';
 import { SKINS } from '../render/skins';
-import type { Lang } from './i18n';
+import { isLang, type Lang } from './i18n';
 
 export type BoosterKind = 'rotate' | 'hammer' | 'reroll';
 export const BOOSTERS: readonly BoosterKind[] = ['rotate', 'hammer', 'reroll'];
@@ -58,7 +58,7 @@ export function sanitizeProfile(raw: unknown): Profile {
     settings: {
       sound: bool(r.settings?.sound, true),
       haptics: bool(r.settings?.haptics, true),
-      lang: lang === 'en' || lang === 'ru' || lang === 'uz' ? lang : null,
+      lang: isLang(lang) ? lang : null,
     },
     stats: {
       games: nat(r.stats?.games, 0),

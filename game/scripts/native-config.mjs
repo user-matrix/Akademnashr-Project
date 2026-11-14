@@ -11,6 +11,10 @@ const cfg = JSON.parse(readFileSync(join(root, 'native.config.json'), 'utf8'));
 // Google's own SKAdNetwork id is mandatory; add mediation partners' ids here if you add mediation later.
 const SKAD_IDS = ['cstr6suwn9.skadnetwork'];
 
+// Languages the game ships (src/services/i18n.ts). The game translates itself, so iOS has no .lproj
+// folders to infer them from; this key makes the App Store list them on the product page.
+const IOS_LOCALIZATIONS = ['en', 'es', 'ru', 'uz', 'zh-Hans', 'ja', 'ko'];
+
 function patchAndroid() {
   const file = join(root, 'android/app/src/main/AndroidManifest.xml');
   if (!existsSync(file)) return console.log('android: not added yet (npx cap add android) — skipped');
@@ -46,6 +50,7 @@ function patchIos() {
   const items = SKAD_IDS.map((id) => `\t\t<dict>\n\t\t\t<key>SKAdNetworkIdentifier</key>\n\t\t\t<string>${id}</string>\n\t\t</dict>`).join('\n');
   xml = setPlistKey(xml, 'SKAdNetworkItems', `<array>\n${items}\n\t</array>`);
   xml = setPlistKey(xml, 'ITSAppUsesNonExemptEncryption', '<false/>');
+  xml = setPlistKey(xml, 'CFBundleLocalizations', `<array>\n${IOS_LOCALIZATIONS.map((l) => `\t\t<string>${l}</string>`).join('\n')}\n\t</array>`);
   xml = setPlistKey(xml, 'UIRequiresFullScreen', '<true/>');
   xml = setPlistKey(xml, 'UISupportedInterfaceOrientations', '<array>\n\t\t<string>UIInterfaceOrientationPortrait</string>\n\t</array>');
   xml = setPlistKey(

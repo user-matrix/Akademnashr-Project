@@ -9,7 +9,7 @@ import { AdManager } from '../services/ads';
 import { track } from '../services/analytics';
 import { sfx } from '../services/audio';
 import { haptic, setHapticsEnabled } from '../services/haptics';
-import { detectLang, getLang, LANG_NAMES, setLang, t, type Lang, type StrKey } from '../services/i18n';
+import { detectLang, getLang, LANG_NAMES, LANGS, setLang, t, type Lang, type StrKey } from '../services/i18n';
 import {
   BOOSTERS,
   claimDailyReward,
@@ -870,9 +870,10 @@ export class App {
       })),
     );
     if (full) {
-      const seg = h('div', { class: 'seg' });
-      (Object.keys(LANG_NAMES) as Lang[]).forEach((l) => {
-        const b = h('button', { class: getLang() === l ? 'on' : '', text: l.toUpperCase(), attrs: { 'aria-label': LANG_NAMES[l] } });
+      // Seven languages don't fit a segmented control: show native names in a grid under the row.
+      const grid = h('div', { class: 'lang-grid' });
+      LANGS.forEach((l: Lang) => {
+        const b = h('button', { class: getLang() === l ? 'on' : '', text: LANG_NAMES[l], attrs: { lang: l } });
         b.addEventListener('click', () => {
           p.settings.lang = l;
           setLang(l);
@@ -880,9 +881,9 @@ export class App {
           this.renderHome();
           this.showSettings();
         });
-        seg.append(b);
+        grid.append(b);
       });
-      box.append(row('globe', t('language'), seg));
+      box.append(h('div', { class: 'setting-row lang-row' }, h('span', { class: 'label' }, icon('globe'), t('language'))), grid);
       if (this.ads.privacyOptionsRequired()) {
         const b = h('button', { class: 'btn ghost', text: '›' });
         b.style.width = '56px';

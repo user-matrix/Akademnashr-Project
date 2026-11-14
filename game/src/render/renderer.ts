@@ -499,6 +499,18 @@ export class Renderer {
     });
   }
 
+  /** Sets ctx.font, shrinking the size so `text` fits in maxWidth (long translations, small phones). */
+  private fitFont(ctx: CanvasRenderingContext2D, text: string, weight: number, size: number, maxWidth: number): number {
+    const font = (px: number) => `${weight} ${px}px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`;
+    ctx.font = font(size);
+    const w = ctx.measureText(text).width;
+    if (w > maxWidth) {
+      size = Math.max(10, Math.floor((size * maxWidth) / w));
+      ctx.font = font(size);
+    }
+    return size;
+  }
+
   floatText(text: string, x: number, y: number, color: string, size: number): void {
     const L = this.layout;
     this.fx.add({
@@ -539,8 +551,7 @@ export class Renderer {
         ctx.textBaseline = 'middle';
         ctx.lineJoin = 'round';
         if (main) {
-          const size = Math.round(L.cell * 0.95);
-          ctx.font = `900 ${size}px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`;
+          const size = this.fitFont(ctx, main, 900, Math.round(L.cell * 0.95), L.boardSize * 0.92);
           ctx.lineWidth = size * 0.2;
           ctx.strokeStyle = THEME.textStroke;
           ctx.strokeText(main, 0, 0);
@@ -551,8 +562,7 @@ export class Renderer {
           ctx.fillText(main, 0, 0);
         }
         if (sub) {
-          const size = Math.round(L.cell * 0.5);
-          ctx.font = `800 ${size}px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`;
+          const size = this.fitFont(ctx, sub, 800, Math.round(L.cell * 0.5), L.boardSize * 0.92);
           ctx.lineWidth = size * 0.22;
           ctx.strokeStyle = THEME.textStroke;
           const y = main ? L.cell * 0.85 : 0;
