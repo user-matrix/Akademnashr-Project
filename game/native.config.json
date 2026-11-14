@@ -1,0 +1,6 @@
+{
+  "_comment": "AdMob APP IDs (not ad unit IDs). These defaults are Google's public TEST app IDs. Replace with your own from the AdMob console before release, then run: npm run native:config",
+  "admobAppIdAndroid": "ca-app-pub-3940256099942544~3347511713",
+  "admobAppIdIos": "ca-app-pub-3940256099942544~1458002511",
+  "trackingDescription": "This identifier will be used to deliver more relevant ads to you."
+}

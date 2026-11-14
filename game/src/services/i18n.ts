@@ -1,0 +1,211 @@
+export type Lang = 'en' | 'ru' | 'uz';
+
+const en = {
+  play: 'Play',
+  continue: 'Continue',
+  daily: 'Daily Challenge',
+  target: 'Target: {n}',
+  streak: '{n}-day streak',
+  completed: 'Completed',
+  todayBest: 'Today: {n}',
+  best: 'Best',
+  settings: 'Settings',
+  sound: 'Sound',
+  haptics: 'Vibration',
+  language: 'Language',
+  privacy: 'Privacy options',
+  resume: 'Resume',
+  restart: 'Restart',
+  home: 'Home',
+  paused: 'Paused',
+  noSpace: 'No space left!',
+  revive: 'Second chance',
+  watchAd: 'Watch a short ad',
+  useBooster: 'Use a booster',
+  finish: 'Finish',
+  giveUp: 'Give up',
+  gameOver: 'Game over',
+  score: 'Score',
+  newBest: 'New record!',
+  coins: 'Coins',
+  double: '×2 coins',
+  playAgain: 'Play again',
+  rotate: 'Rotate',
+  rotateDesc: 'Unlocks free rotation for one piece',
+  hammer: 'Hammer',
+  hammerDesc: 'Smashes a 3×3 area of the board',
+  reroll: 'Shuffle',
+  rerollDesc: 'Replaces your pieces with a new set',
+  buy: 'Buy',
+  free: 'Free',
+  adUnavailable: 'Ad is not available right now',
+  notEnoughCoins: 'Not enough coins',
+  pickRotate: 'Tap a piece to unlock rotation',
+  pickHammer: 'Tap the board to smash 3×3',
+  tutorial: 'Drag a block onto the board',
+  tapToRotate: 'Tap the piece to rotate it',
+  dailyDone: 'Daily target reached!',
+  combo: 'Combo ×{n}',
+  fever: 'FEVER ×2',
+  good: 'Good!',
+  great: 'Great!',
+  amazing: 'Amazing!',
+  unreal: 'Unbelievable!',
+  perfectColor: 'Perfect colour!',
+  allClear: 'All clear!',
+  cancel: 'Cancel',
+  close: 'Close',
+  noBoostersDaily: 'Boosters are off in the Daily Challenge',
+  version: 'Version',
+};
+
+export type StrKey = keyof typeof en;
+type Dict = Record<StrKey, string>;
+
+const ru: Dict = {
+  play: 'Играть',
+  continue: 'Продолжить',
+  daily: 'Испытание дня',
+  target: 'Цель: {n}',
+  streak: '{n} дн. подряд',
+  completed: 'Выполнено',
+  todayBest: 'Сегодня: {n}',
+  best: 'Рекорд',
+  settings: 'Настройки',
+  sound: 'Звук',
+  haptics: 'Вибрация',
+  language: 'Язык',
+  privacy: 'Конфиденциальность',
+  resume: 'Продолжить',
+  restart: 'Заново',
+  home: 'Меню',
+  paused: 'Пауза',
+  noSpace: 'Нет места!',
+  revive: 'Второй шанс',
+  watchAd: 'Посмотреть рекламу',
+  useBooster: 'Использовать бонус',
+  finish: 'Завершить',
+  giveUp: 'Сдаться',
+  gameOver: 'Игра окончена',
+  score: 'Очки',
+  newBest: 'Новый рекорд!',
+  coins: 'Монеты',
+  double: '×2 монеты',
+  playAgain: 'Играть снова',
+  rotate: 'Поворот',
+  rotateDesc: 'Позволяет поворачивать одну фигуру',
+  hammer: 'Молот',
+  hammerDesc: 'Разбивает область 3×3 на поле',
+  reroll: 'Замена',
+  rerollDesc: 'Заменяет все фигуры новыми',
+  buy: 'Купить',
+  free: 'Бесплатно',
+  adUnavailable: 'Реклама сейчас недоступна',
+  notEnoughCoins: 'Недостаточно монет',
+  pickRotate: 'Выберите фигуру для поворота',
+  pickHammer: 'Нажмите на поле, чтобы разбить 3×3',
+  tutorial: 'Перетащите фигуру на поле',
+  tapToRotate: 'Нажмите на фигуру, чтобы повернуть',
+  dailyDone: 'Цель дня выполнена!',
+  combo: 'Комбо ×{n}',
+  fever: 'ЖАР ×2',
+  good: 'Хорошо!',
+  great: 'Отлично!',
+  amazing: 'Потрясающе!',
+  unreal: 'Невероятно!',
+  perfectColor: 'Один цвет!',
+  allClear: 'Поле чисто!',
+  cancel: 'Отмена',
+  close: 'Закрыть',
+  noBoostersDaily: 'В испытании дня бонусы отключены',
+  version: 'Версия',
+};
+
+const uz: Dict = {
+  play: "O'ynash",
+  continue: 'Davom etish',
+  daily: 'Kunlik sinov',
+  target: 'Maqsad: {n}',
+  streak: '{n} kun ketma-ket',
+  completed: 'Bajarildi',
+  todayBest: 'Bugun: {n}',
+  best: 'Rekord',
+  settings: 'Sozlamalar',
+  sound: 'Ovoz',
+  haptics: 'Tebranish',
+  language: 'Til',
+  privacy: 'Maxfiylik sozlamalari',
+  resume: 'Davom etish',
+  restart: 'Qaytadan',
+  home: 'Bosh menyu',
+  paused: 'Pauza',
+  noSpace: 'Joy qolmadi!',
+  revive: 'Ikkinchi imkoniyat',
+  watchAd: "Qisqa reklama ko'rish",
+  useBooster: 'Bonusdan foydalanish',
+  finish: 'Yakunlash',
+  giveUp: "Taslim bo'lish",
+  gameOver: "O'yin tugadi",
+  score: 'Ochko',
+  newBest: 'Yangi rekord!',
+  coins: 'Tangalar',
+  double: '×2 tanga',
+  playAgain: "Yana o'ynash",
+  rotate: 'Burish',
+  rotateDesc: 'Bitta blokni xohlagancha burish imkonini beradi',
+  hammer: "Bolg'a",
+  hammerDesc: 'Taxtadagi 3×3 maydonni buzadi',
+  reroll: 'Almashtirish',
+  rerollDesc: 'Barcha bloklarni yangilariga almashtiradi',
+  buy: 'Sotib olish',
+  free: 'Bepul',
+  adUnavailable: 'Reklama hozircha mavjud emas',
+  notEnoughCoins: 'Tanga yetarli emas',
+  pickRotate: 'Burish uchun blokni tanlang',
+  pickHammer: '3×3 buzish uchun taxtaga bosing',
+  tutorial: "Blokni taxtaga sudrab qo'ying",
+  tapToRotate: 'Burish uchun blokka bosing',
+  dailyDone: 'Kunlik maqsad bajarildi!',
+  combo: 'Kombo ×{n}',
+  fever: "QIZG'IN ×2",
+  good: 'Yaxshi!',
+  great: "Zo'r!",
+  amazing: 'Ajoyib!',
+  unreal: 'Hayratlanarli!',
+  perfectColor: 'Bir xil rang!',
+  allClear: 'Taxta toza!',
+  cancel: 'Bekor qilish',
+  close: 'Yopish',
+  noBoostersDaily: "Kunlik sinovda bonuslar o'chiq",
+  version: 'Versiya',
+};
+
+const DICTS: Record<Lang, Dict> = { en, ru, uz };
+
+export const LANG_NAMES: Record<Lang, string> = { en: 'English', ru: 'Русский', uz: "O'zbekcha" };
+
+let current: Lang = 'en';
+
+export function detectLang(): Lang {
+  const langs = typeof navigator !== 'undefined' ? navigator.languages ?? [navigator.language] : [];
+  for (const l of langs) {
+    const code = (l || '').toLowerCase().slice(0, 2);
+    if (code === 'uz' || code === 'ru' || code === 'en') return code;
+  }
+  return 'en';
+}
+
+export function setLang(lang: Lang): void {
+  current = lang;
+  if (typeof document !== 'undefined') document.documentElement.lang = lang;
+}
+
+export function getLang(): Lang {
+  return current;
+}
+
+export function t(key: StrKey, vars?: Record<string, string | number>): string {
+  let s = DICTS[current][key] ?? en[key];
+  if (vars) for (const k in vars) s = s.replace(`{${k}}`, String(vars[k]));
+  return s;
+}
