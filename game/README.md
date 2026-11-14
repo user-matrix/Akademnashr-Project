@@ -46,7 +46,7 @@ src/
     rng.ts             seed'li tasodifiy son generatori (kunlik sinov hamma uchun bir xil)
   render/              ← Canvas chizish: sprite kesh, effektlar, zarrachalar
   input.ts             ← Sensor/sichqoncha: sudrash, burish, bolg'a
-  services/            ← Reklama, saqlash, tovush, vibratsiya, 7 til (en/es/ru/uz/zh/ja/ko), analitika
+  services/            ← Reklama, saqlash, tovush, vibratsiya, 8 til (en/es/ru/uz/ar/zh/ja/ko), analitika
   ui/app.ts            ← Ekranlar va o'yin oqimi
 tests/                 ← Vitest testlari
 android/, ios/         ← Capacitor native loyihalari (git'da saqlanadi)
@@ -57,9 +57,11 @@ native.config.json     ← AdMob APP ID'lari (native)
 
 ## Tillar
 
-O'yin 7 tilda ishlaydi: ingliz, ispan, rus, o'zbek, xitoy (soddalashtirilgan), yapon, koreys. Til birinchi ishga tushishda telefon tilidan avtomatik tanlanadi va Sozlamalar'da o'zgartiriladi.
+O'yin 8 tilda ishlaydi: ingliz, ispan, rus, o'zbek, arab, xitoy (soddalashtirilgan), yapon, koreys. Til birinchi ishga tushishda telefon tilidan avtomatik tanlanadi va Sozlamalar'da o'zgartiriladi.
 
-Yangi matn qo'shish: `src/services/i18n.ts` dagi `en` lug'atiga kalit qo'shing. TypeScript qolgan 6 tilda ham shu kalit bo'lishini talab qiladi, `tests/i18n.test.ts` esa `{n}` kabi o'rin belgilarini tekshiradi. Yangi til qo'shilsa, `scripts/native-config.mjs → IOS_LOCALIZATIONS` ro'yxatini ham yangilang.
+Yangi matn qo'shish: `src/services/i18n.ts` dagi `en` lug'atiga kalit qo'shing. TypeScript qolgan 7 tilda ham shu kalit bo'lishini talab qiladi, `tests/i18n.test.ts` esa `{n}` kabi o'rin belgilarini tekshiradi. Yangi til qo'shilsa, `scripts/native-config.mjs → IOS_LOCALIZATIONS` ro'yxatini ham yangilang.
+
+**Arab tili (RTL):** arab tili tanlanganda `<html dir="rtl">` qo'yiladi va interfeys ko'zgudek aylanadi. O'yin taxtasi aylanmaydi. CSS'da `left`/`right` o'rniga mantiqiy xossalardan foydalaning (`inset-inline-start`, `text-align: start`). Raqamlar RTL ichida ham chapdan o'ngga o'qiladi: minglik ajratkich U+202F, `×2` kabi ko'paytiruvchilar esa arab matnida U+2066…U+2069 izolyatorlari ichida turadi.
 
 ## Muhim qoidalar
 

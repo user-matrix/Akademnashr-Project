@@ -58,8 +58,8 @@ Qadamlarni tartib bilan bajaring. ⚠️ belgisi qaytarib bo'lmaydigan yoki akka
    - **Content rating:** IARC so'rovnomasi (zo'ravonlik yo'q, natija odatda "Everyone / 3+")
    - **Target audience:** **13+** tanlang. "Bolalar" tanlansa, Families siyosati qo'shimcha cheklovlar qo'yadi va bolalar uchun sertifikatlangan reklama talab qilinadi.
    - **Data safety:** AdMob SDK quyidagilarni yig'adi va reklama maqsadida uzatadi: *Device or other IDs* (reklama ID), *Approximate location* (IP orqali), *App interactions*, *Diagnostics*. O'yinning o'zi shaxsiy ma'lumot yig'maydi (hamma narsa qurilmada). Shakl to'ldirishdan oldin Google'ning "AdMob data disclosure" sahifasini tekshiring.
-4. **Store listing:** sarlavha (≤30 belgi), qisqa tavsif (≤80), to'liq tavsif (≤4000), ikonka 512×512, feature graphic 1024×500, kamida 4 ta telefon skrinshoti. Tavsif va skrinshotlarni o'yindagi 7 tilning hammasida qo'shing (en-US, es-ES va es-419, ru-RU, uz, zh-CN, ja-JP, ko-KR). Tarjima qilingan sahifa o'sha mamlakatda o'rnatishlarni sezilarli oshiradi.
-   ⚠️ O'yin ichidagi tarjimalarni nashrdan oldin **ona tili sohibiga** tekshirtiring, ayniqsa yapon, koreys va xitoy tillarini. Bu bozorlar sifatga juda talabchan va reklama eCPM'i yuqori.
+4. **Store listing:** sarlavha (≤30 belgi), qisqa tavsif (≤80), to'liq tavsif (≤4000), ikonka 512×512, feature graphic 1024×500, kamida 4 ta telefon skrinshoti. Tavsif va skrinshotlarni o'yindagi 8 tilning hammasida qo'shing (en-US, es-ES va es-419, ru-RU, uz, ar, zh-CN, ja-JP, ko-KR). Tarjima qilingan sahifa o'sha mamlakatda o'rnatishlarni sezilarli oshiradi.
+   ⚠️ O'yin ichidagi tarjimalarni nashrdan oldin **ona tili sohibiga** tekshirtiring, ayniqsa yapon, koreys, xitoy va arab tillarini. Bu bozorlar sifatga juda talabchan va reklama eCPM'i yuqori.
 5. ⚠️ **Yangi shaxsiy akkauntlar uchun:** production'ga chiqishdan oldin **closed testing** bo'lishi shart: **kamida 12 tester, uzluksiz 14 kun**. Testerlarni oldindan tayyorlang (do'stlar, oila, Telegram guruh). Testerlar ilovani haqiqatan ishlatishi kerak.
 6. 14 kundan keyin: **Apply for production** → Production release.
 

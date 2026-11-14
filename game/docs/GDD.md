@@ -106,7 +106,7 @@ Keyingi bosqich: sarguzasht rejimi (darajalar va maqsadlar), reyting (Game Cente
 
 ## 10. Yo'l xaritasi
 
-1. **MVP (tayyor):** klassik rejim, kunlik sinov, FEVER, bomba, olmos, 3 bonus, AdMob (UMP + ATT), 7 til (en, es, ru, uz, zh, ja, ko), ikonka va splash, testlar.
+1. **MVP (tayyor):** klassik rejim, kunlik sinov, FEVER, bomba, olmos, 3 bonus, AdMob (UMP + ATT), 8 til (en, es, ru, uz, ar, zh, ja, ko; arab tili uchun RTL), ikonka va splash, testlar.
 2. **Soft launch (1–2 hafta):** Firebase Analytics + Crashlytics, Remote Config (balansni qayta build'siz sozlash), haqiqiy qurilmalarda test, Play Console closed testing.
 3. **v1.1:** kunlik sovg'a ✅, blok uslublari ✅, "Reklamasiz" xaridi, mediation.
 4. **v1.2:** sarguzasht rejimi (100+ daraja), reytinglar, Telegram Mini App versiyasi (veb build tayyor).

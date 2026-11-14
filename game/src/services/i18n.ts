@@ -1,7 +1,10 @@
-export type Lang = 'en' | 'ru' | 'uz' | 'es' | 'ko' | 'ja' | 'zh';
+export type Lang = 'en' | 'ru' | 'uz' | 'es' | 'ko' | 'ja' | 'zh' | 'ar';
 
 /** Display order in the language picker. */
-export const LANGS: readonly Lang[] = ['en', 'es', 'ru', 'uz', 'zh', 'ja', 'ko'];
+export const LANGS: readonly Lang[] = ['en', 'es', 'ru', 'uz', 'ar', 'zh', 'ja', 'ko'];
+
+/** Languages written right-to-left: the UI is mirrored for them. */
+const RTL: readonly Lang[] = ['ar'];
 
 const en = {
   play: 'Play',
@@ -503,13 +506,86 @@ const zh: Dict = {
   version: "版本",
 };
 
-const DICTS: Record<Lang, Dict> = { en, ru, uz, es, ko, ja, zh };
+// \u2066…\u2069 (LRI…PDI) isolate "×2" so it is not reordered to "2×" inside right-to-left text.
+const ar: Dict = {
+  play: "العب",
+  continue: "متابعة",
+  daily: "التحدي اليومي",
+  target: "الهدف: {n}",
+  streak: "{n} أيام متتالية",
+  completed: "مكتمل",
+  todayBest: "اليوم: {n}",
+  best: "أفضل نتيجة",
+  settings: "الإعدادات",
+  sound: "الصوت",
+  haptics: "الاهتزاز",
+  language: "اللغة",
+  privacy: "خيارات الخصوصية",
+  resume: "استئناف",
+  restart: "إعادة البدء",
+  home: "الرئيسية",
+  paused: "إيقاف مؤقت",
+  noSpace: "لا توجد مساحة!",
+  revive: "فرصة ثانية",
+  watchAd: "شاهد إعلانًا قصيرًا",
+  useBooster: "استخدم معززًا",
+  finish: "إنهاء",
+  giveUp: "استسلام",
+  gameOver: "انتهت اللعبة",
+  score: "النقاط",
+  newBest: "رقم قياسي جديد!",
+  coins: "العملات",
+  double: "عملات \u2066×2\u2069",
+  playAgain: "العب مجددًا",
+  rotate: "تدوير",
+  rotateDesc: "يتيح تدوير قطعة واحدة بحرية",
+  hammer: "المطرقة",
+  hammerDesc: "تحطّم مساحة 3×3 من اللوحة",
+  reroll: "تبديل",
+  rerollDesc: "يستبدل قطعك بمجموعة جديدة",
+  buy: "شراء",
+  free: "مجانًا",
+  adUnavailable: "الإعلان غير متاح حاليًا",
+  notEnoughCoins: "لا توجد عملات كافية",
+  pickRotate: "اضغط على قطعة لتفعيل التدوير",
+  pickHammer: "اضغط على اللوحة لتحطيم 3×3",
+  tutorial: "اسحب قطعة إلى اللوحة",
+  tapToRotate: "اضغط على القطعة لتدويرها",
+  dailyDone: "تم تحقيق الهدف اليومي!",
+  combo: "كومبو \u2066×{n}\u2069",
+  fever: "حماس \u2066×2\u2069",
+  good: "جيد!",
+  great: "رائع!",
+  amazing: "مذهل!",
+  unreal: "لا يُصدَّق!",
+  perfectColor: "لون مثالي!",
+  allClear: "اللوحة نظيفة!",
+  cancel: "إلغاء",
+  close: "إغلاق",
+  noBoostersDaily: "المعززات غير متاحة في التحدي اليومي",
+  dailyReward: "المكافأة اليومية",
+  day: "اليوم {n}",
+  claim: "استلام",
+  claimDouble: "استلام \u2066×2\u2069",
+  comeBack: "عُد غدًا للمزيد!",
+  skins: "الأنماط",
+  select: "اختيار",
+  selected: "مُختار",
+  skinClassic: "كلاسيكي",
+  skinCandy: "حلوى",
+  skinNeon: "نيون",
+  skinRoyal: "ملكي",
+  version: "الإصدار",
+};
+
+const DICTS: Record<Lang, Dict> = { en, ru, uz, es, ko, ja, zh, ar };
 
 export const LANG_NAMES: Record<Lang, string> = {
   en: 'English',
   es: 'Español',
   ru: 'Русский',
   uz: "O'zbekcha",
+  ar: 'العربية',
   zh: '中文',
   ja: '日本語',
   ko: '한국어',
@@ -535,7 +611,14 @@ export function detectLang(): Lang {
 
 export function setLang(lang: Lang): void {
   current = lang;
-  if (typeof document !== 'undefined') document.documentElement.lang = lang;
+  if (typeof document !== 'undefined') {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = isRtl(lang) ? 'rtl' : 'ltr';
+  }
+}
+
+export function isRtl(lang: Lang = current): boolean {
+  return RTL.includes(lang);
 }
 
 export function getLang(): Lang {

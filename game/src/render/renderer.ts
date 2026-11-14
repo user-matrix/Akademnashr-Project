@@ -522,6 +522,7 @@ export class Renderer {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         const yy = y - ease.outCubic(t) * L.cell * 1.2;
+        ctx.direction = 'ltr'; // "+120" must stay "+120" when the UI is right-to-left
         const half = ctx.measureText(text).width / 2 + 4;
         const px = Math.max(L.boardX + half, Math.min(L.boardX + L.boardSize - half, x));
         ctx.lineWidth = Math.max(3, size * 0.16);

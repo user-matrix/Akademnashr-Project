@@ -13,7 +13,7 @@ const SKAD_IDS = ['cstr6suwn9.skadnetwork'];
 
 // Languages the game ships (src/services/i18n.ts). The game translates itself, so iOS has no .lproj
 // folders to infer them from; this key makes the App Store list them on the product page.
-const IOS_LOCALIZATIONS = ['en', 'es', 'ru', 'uz', 'zh-Hans', 'ja', 'ko'];
+const IOS_LOCALIZATIONS = ['en', 'es', 'ru', 'uz', 'ar', 'zh-Hans', 'ja', 'ko'];
 
 function patchAndroid() {
   const file = join(root, 'android/app/src/main/AndroidManifest.xml');

@@ -1,5 +1,5 @@
 import { afterAll, describe, expect, it } from 'vitest';
-import { LANG_NAMES, LANGS, setLang, STR_KEYS, t } from '../src/services/i18n';
+import { isRtl, LANG_NAMES, LANGS, setLang, STR_KEYS, t } from '../src/services/i18n';
 
 const placeholders = (s: string) => (s.match(/\{\w+\}/g) ?? []).sort().join(',');
 
@@ -25,6 +25,10 @@ describe('i18n', () => {
     setLang('es');
     expect(t('combo', { n: 4 })).toBe('Combo ×4');
     for (const l of LANGS) expect(LANG_NAMES[l]).toBeTruthy();
-    expect(new Set(LANGS).size).toBe(7);
+    setLang('ar');
+    expect(t('day', { n: 3 })).toBe('اليوم 3');
+    expect(isRtl('ar')).toBe(true);
+    expect(isRtl('en')).toBe(false);
+    expect(new Set(LANGS).size).toBe(8);
   });
 });

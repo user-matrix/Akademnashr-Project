@@ -35,5 +35,7 @@ export function $(id: string): HTMLElement {
 }
 
 export function formatNumber(n: number): string {
-  return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  // Narrow no-break space (U+202F) as the thousands separator: it is typographically right for most
+  // locales and, unlike a plain space, keeps "1 452" in order inside right-to-left (Arabic) text.
+  return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u202f');
 }
