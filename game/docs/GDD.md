@@ -77,6 +77,7 @@ Asosiy daromad: **rewarded video** (eng yuqori eCPM, o'yinchi o'zi tanlaydi, ret
 | Joy qolmadi → Ikkinchi imkoniyat | Rewarded | Har o'yinda 1 marta |
 | O'yin tugadi → ×2 tanga | Rewarded | Har o'yinda 1 marta |
 | Bonus tugadi → Bepul olish | Rewarded | Cheksiz |
+| Kunlik sovg'a → ×2 olish | Rewarded | Kuniga 1 marta |
 | O'yin tugagach "Yana o'ynash"/"Bosh menyu" | Interstitial | Faqat 2-o'yindan keyin, kamida 120 soniya oraliq, rewarded ko'rilgan bo'lsa 60 soniya ichida ko'rsatilmaydi |
 
 **Banner yo'q.** Banner eCPM'i past, o'yin maydonini kichraytiradi va tasodifiy bosishlar AdMob siyosatini buzish xavfini tug'diradi. Barcha chastota cheklovlari `src/config.ts → ADS.policy` da.
@@ -85,8 +86,12 @@ Keyingi bosqichlar: "Reklamasiz" xaridi (IAP), mediation (AppLovin MAX yoki Leve
 
 ## 8. Retention (qaytib kelish)
 
-Hozir mavjud: kunlik sinov va streak, rekord, saqlangan o'yinni davom ettirish (ilova yopilsa ham), bonus inventari.
-Keyingi bosqich: kunlik sovg'a (7 kunlik kalendar), sarguzasht rejimi (darajalar va maqsadlar), blok skinlari va mavzular (tangaga), reyting (Game Center / Play Games), push-eslatmalar.
+Hozir mavjud:
+- kunlik sinov va streak, rekord, saqlangan o'yinni davom ettirish (ilova yopilsa ham), bonus inventari;
+- **kunlik sovg'a**: 7 kunlik kalendar (50 → 300 tanga va bonuslar). Bir kun o'tkazib yuborilsa, 1-kundan boshlanadi. Har bir sovg'ani reklama ko'rib ×2 qilish mumkin. Oyna kuniga bir marta o'zi chiqadi, lekin birinchi o'yindan oldin chiqmaydi;
+- **blok uslublari**: Klassik (bepul), Konfet (500), Neon (1000), Qirollik (2000 tanga). Bu tangalarga uzoq muddatli maqsad beradi va "×2 tanga" reklamasiga motivatsiya qiladi.
+
+Keyingi bosqich: sarguzasht rejimi (darajalar va maqsadlar), reyting (Game Center / Play Games), push-eslatmalar.
 
 ## 9. KPI maqsadlari (soft launch)
 
@@ -103,5 +108,5 @@ Keyingi bosqich: kunlik sovg'a (7 kunlik kalendar), sarguzasht rejimi (darajalar
 
 1. **MVP (tayyor):** klassik rejim, kunlik sinov, FEVER, bomba, olmos, 3 bonus, AdMob (UMP + ATT), 3 til, ikonka va splash, testlar.
 2. **Soft launch (1–2 hafta):** Firebase Analytics + Crashlytics, Remote Config (balansni qayta build'siz sozlash), haqiqiy qurilmalarda test, Play Console closed testing.
-3. **v1.1:** kunlik sovg'a, "Reklamasiz" xaridi, mediation, skinlar.
+3. **v1.1:** kunlik sovg'a ✅, blok uslublari ✅, "Reklamasiz" xaridi, mediation.
 4. **v1.2:** sarguzasht rejimi (100+ daraja), reytinglar, Telegram Mini App versiyasi (veb build tayyor).

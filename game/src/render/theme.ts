@@ -1,7 +1,6 @@
 import { Special } from '../core/generator';
+import { DEFAULT_SKIN, type Skin } from './skins';
 
-/** Block colours, index = colour id (0 unused). */
-export const BLOCK_COLORS = ['#000000', '#ff5a6e', '#ff9a3c', '#ffd23f', '#36d982', '#3cc7ff', '#9b6bff'];
 
 export const THEME = {
   boardBg: '#151a3f',
@@ -44,9 +43,21 @@ export { roundRect };
 export class SpriteCache {
   private cache = new Map<string, HTMLCanvasElement>();
   dpr = 1;
+  skin: Skin = DEFAULT_SKIN;
 
   clear(): void {
     this.cache.clear();
+  }
+
+  setSkin(skin: Skin): void {
+    if (skin.id === this.skin.id) return;
+    this.skin = skin;
+    this.cache.clear();
+  }
+
+  /** CSS colour of a colour id in the active skin (used for particles). */
+  colorOf(color: number): string {
+    return this.skin.colors[color] ?? this.skin.colors[1];
   }
 
   get(color: number, size: number, special: Special = Special.None): HTMLCanvasElement {
@@ -64,10 +75,27 @@ export class SpriteCache {
     const cv = document.createElement('canvas');
     cv.width = cv.height = s;
     const ctx = cv.getContext('2d')!;
-    const base = BLOCK_COLORS[color] ?? BLOCK_COLORS[1];
-    const r = s * 0.2;
+    const base = this.colorOf(color);
+    switch (this.skin.style) {
+      case 'candy':
+        this.drawCandy(ctx, s, base);
+        break;
+      case 'neon':
+        this.drawNeon(ctx, s, base);
+        break;
+      case 'royal':
+        this.drawRoyal(ctx, s, base);
+        break;
+      default:
+        this.drawGloss(ctx, s, base);
+    }
+    if (special === Special.Bomb) this.drawBomb(ctx, s);
+    else if (special === Special.Gem) this.drawGem(ctx, s);
+    return cv;
+  }
 
-    // Body
+  private drawGloss(ctx: CanvasRenderingContext2D, s: number, base: string): void {
+    const r = s * 0.2;
     const body = ctx.createLinearGradient(0, 0, 0, s);
     body.addColorStop(0, shade(base, 0.32));
     body.addColorStop(0.55, base);
@@ -75,7 +103,6 @@ export class SpriteCache {
     roundRect(ctx, 0.5, 0.5, s - 1, s - 1, r);
     ctx.fillStyle = body;
     ctx.fill();
-
     // Bottom lip (gives the block thickness)
     ctx.save();
     roundRect(ctx, 0.5, 0.5, s - 1, s - 1, r);
@@ -83,7 +110,6 @@ export class SpriteCache {
     ctx.fillStyle = shade(base, -0.42);
     ctx.fillRect(0, s * 0.86, s, s * 0.14);
     ctx.restore();
-
     // Glossy top highlight
     const gloss = ctx.createLinearGradient(0, s * 0.08, 0, s * 0.5);
     gloss.addColorStop(0, 'rgba(255,255,255,0.55)');
@@ -91,22 +117,109 @@ export class SpriteCache {
     roundRect(ctx, s * 0.12, s * 0.08, s * 0.76, s * 0.4, r * 0.7);
     ctx.fillStyle = gloss;
     ctx.fill();
-
-    // Sparkle dot
     ctx.fillStyle = 'rgba(255,255,255,0.75)';
     ctx.beginPath();
     ctx.arc(s * 0.26, s * 0.24, s * 0.055, 0, Math.PI * 2);
     ctx.fill();
-
-    // Outline
     roundRect(ctx, 0.5, 0.5, s - 1, s - 1, r);
     ctx.strokeStyle = shade(base, -0.5);
     ctx.lineWidth = Math.max(1, s * 0.035);
     ctx.stroke();
+  }
 
-    if (special === Special.Bomb) this.drawBomb(ctx, s);
-    else if (special === Special.Gem) this.drawGem(ctx, s);
-    return cv;
+  /** Soft pastel jelly with a bubble highlight. */
+  private drawCandy(ctx: CanvasRenderingContext2D, s: number, base: string): void {
+    const r = s * 0.34;
+    const body = ctx.createRadialGradient(s * 0.35, s * 0.3, s * 0.05, s * 0.5, s * 0.5, s * 0.75);
+    body.addColorStop(0, shade(base, 0.45));
+    body.addColorStop(0.6, base);
+    body.addColorStop(1, shade(base, -0.18));
+    roundRect(ctx, 0.5, 0.5, s - 1, s - 1, r);
+    ctx.fillStyle = body;
+    ctx.fill();
+    // Candy stripe
+    ctx.save();
+    roundRect(ctx, 0.5, 0.5, s - 1, s - 1, r);
+    ctx.clip();
+    ctx.strokeStyle = 'rgba(255,255,255,0.28)';
+    ctx.lineWidth = s * 0.12;
+    ctx.beginPath();
+    ctx.moveTo(-s * 0.1, s * 0.75);
+    ctx.lineTo(s * 0.75, -s * 0.1);
+    ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+    ctx.beginPath();
+    ctx.ellipse(s * 0.3, s * 0.24, s * 0.12, s * 0.07, -0.6, 0, Math.PI * 2);
+    ctx.fill();
+    roundRect(ctx, 0.5, 0.5, s - 1, s - 1, r);
+    ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+    ctx.lineWidth = Math.max(1, s * 0.04);
+    ctx.stroke();
+  }
+
+  /** Dark tile with a glowing coloured rim. */
+  private drawNeon(ctx: CanvasRenderingContext2D, s: number, base: string): void {
+    const r = s * 0.16;
+    const inset = s * 0.1;
+    roundRect(ctx, inset, inset, s - inset * 2, s - inset * 2, r);
+    ctx.fillStyle = '#0c0f2a';
+    ctx.fill();
+    ctx.save();
+    ctx.shadowColor = base;
+    ctx.shadowBlur = s * 0.18;
+    ctx.strokeStyle = base;
+    ctx.lineWidth = Math.max(1.5, s * 0.08);
+    ctx.stroke();
+    ctx.restore();
+    const core = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s * 0.4);
+    core.addColorStop(0, base + '66');
+    core.addColorStop(1, base + '00');
+    ctx.fillStyle = core;
+    ctx.fillRect(inset, inset, s - inset * 2, s - inset * 2);
+    roundRect(ctx, s * 0.3, s * 0.3, s * 0.4, s * 0.4, s * 0.08);
+    ctx.strokeStyle = shade(base, 0.5);
+    ctx.lineWidth = Math.max(1, s * 0.035);
+    ctx.stroke();
+  }
+
+  /** Faceted gemstone with a gold frame. */
+  private drawRoyal(ctx: CanvasRenderingContext2D, s: number, base: string): void {
+    const r = s * 0.12;
+    roundRect(ctx, 0.5, 0.5, s - 1, s - 1, r);
+    const frame = ctx.createLinearGradient(0, 0, s, s);
+    frame.addColorStop(0, '#fff2b0');
+    frame.addColorStop(0.5, '#e0a93a');
+    frame.addColorStop(1, '#8a5a12');
+    ctx.fillStyle = frame;
+    ctx.fill();
+    const i = s * 0.12;
+    const w = s - i * 2;
+    const body = ctx.createLinearGradient(i, i, i + w, i + w);
+    body.addColorStop(0, shade(base, 0.4));
+    body.addColorStop(0.5, base);
+    body.addColorStop(1, shade(base, -0.4));
+    ctx.fillStyle = body;
+    ctx.fillRect(i, i, w, w);
+    // Facets
+    const c = s / 2;
+    const facet = (pts: number[][], fill: string) => {
+      ctx.beginPath();
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      for (const [x, y] of pts.slice(1)) ctx.lineTo(x, y);
+      ctx.closePath();
+      ctx.fillStyle = fill;
+      ctx.fill();
+    };
+    const t = s * 0.3;
+    facet([[i, i], [i + w, i], [c + t / 2, c - t / 2], [c - t / 2, c - t / 2]], 'rgba(255,255,255,0.35)');
+    facet([[i, i], [c - t / 2, c - t / 2], [c - t / 2, c + t / 2], [i, i + w]], 'rgba(255,255,255,0.15)');
+    facet([[i, i + w], [c - t / 2, c + t / 2], [c + t / 2, c + t / 2], [i + w, i + w]], 'rgba(0,0,0,0.25)');
+    facet([[i + w, i], [i + w, i + w], [c + t / 2, c + t / 2], [c + t / 2, c - t / 2]], 'rgba(0,0,0,0.12)');
+    ctx.strokeStyle = 'rgba(80,45,0,0.6)';
+    ctx.lineWidth = Math.max(1, s * 0.03);
+    roundRect(ctx, 0.5, 0.5, s - 1, s - 1, r);
+    ctx.stroke();
   }
 
   private drawBomb(ctx: CanvasRenderingContext2D, s: number): void {

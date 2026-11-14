@@ -3,6 +3,8 @@ import { dailyTargetFor, Game, type ClearedCell, type Mode, type PlaceResult } f
 import { Special } from '../core/generator';
 import { InputController } from '../input';
 import { Renderer, type ToolMode } from '../render/renderer';
+import { SKINS, skinById, type Skin } from '../render/skins';
+import { SpriteCache } from '../render/theme';
 import { AdManager } from '../services/ads';
 import { track } from '../services/analytics';
 import { sfx } from '../services/audio';
@@ -10,9 +12,12 @@ import { haptic, setHapticsEnabled } from '../services/haptics';
 import { detectLang, getLang, LANG_NAMES, setLang, t, type Lang, type StrKey } from '../services/i18n';
 import {
   BOOSTERS,
+  claimDailyReward,
   completeDaily,
+  DAILY_REWARDS,
   dateKey,
   liveDailyStreak,
+  rewardState,
   sanitizeProfile,
   type BoosterKind,
   type Profile,
@@ -45,6 +50,8 @@ export class App {
   private shownScore = 0;
   private scoreRaf = 0;
   private boosterEls = {} as Record<BoosterKind, { btn: HTMLButtonElement; badge: HTMLElement }>;
+  /** The daily reward pops up by itself at most once per app launch. */
+  private rewardPrompted = false;
 
   constructor() {
     const canvas = $('board') as HTMLCanvasElement;
@@ -68,6 +75,7 @@ export class App {
     sfx.enabled = this.profile.settings.sound;
     setHapticsEnabled(this.profile.settings.haptics);
     this.ads.noAds = this.profile.noAds;
+    this.renderer.sprites.setSkin(skinById(this.profile.skins.active));
 
     this.buildStaticUi();
     new ResizeObserver(() => {
@@ -131,6 +139,11 @@ export class App {
     this.renderer.invalidate();
     this.setGameChromeVisible(false);
     this.renderHome();
+    // Offer the daily reward once per launch — but never before the player has played their first game.
+    if (!this.rewardPrompted && this.profile.tutorialDone && rewardState(this.profile, dateKey()).canClaim) {
+      this.rewardPrompted = true;
+      this.showDailyReward();
+    }
   }
 
   private renderHome(): void {
@@ -142,6 +155,11 @@ export class App {
     const coins = h('div', { class: 'coin-pill' }, icon('coin'), h('span', { text: formatNumber(p.coins) }));
     const settings = h('button', { class: 'icon-btn', attrs: { 'aria-label': t('settings') } }, icon('settings'));
     settings.addEventListener('click', () => this.showSettings());
+    const gift = h('button', { class: 'icon-btn', attrs: { 'aria-label': t('dailyReward') } }, icon('gift'));
+    if (rewardState(p, today).canClaim) gift.append(h('span', { class: 'dot' }));
+    gift.addEventListener('click', () => this.showDailyReward());
+    const skins = h('button', { class: 'icon-btn', attrs: { 'aria-label': t('skins') } }, icon('palette'));
+    skins.addEventListener('click', () => this.showSkins());
 
     const colors = ['#ff5a6e', '#ff9a3c', '#ffd23f', '#36d982', '#3cc7ff', '#9b6bff'];
     const blocks = h('div', { class: 'blocks' });
@@ -179,7 +197,7 @@ export class App {
 
     const home = $('home');
     home.replaceChildren(
-      h('div', { class: 'home-top' }, settings, coins),
+      h('div', { class: 'home-top' }, h('div', { class: 'row' }, settings, gift, skins), coins),
       h('div', { class: 'logo' }, blocks, h('span', { class: 'w1', text: 'BLOCK' }), h('span', { class: 'w2', text: 'NOVA' })),
       p.bestClassic > 0 ? best : '',
       h('div', { class: 'home-actions' }, play, daily),
@@ -648,6 +666,139 @@ export class App {
       ),
       () => this.closeModal(),
     );
+  }
+
+  // ================================================================== daily reward & styles
+
+  private showDailyReward(): void {
+    const today = dateKey();
+    const st = rewardState(this.profile, today);
+    const grid = h('div', { class: 'reward-grid' });
+    DAILY_REWARDS.forEach((rw, i) => {
+      const items = h('div', { class: 'items' });
+      if (rw.coins) items.append(h('span', { class: 'item' }, icon('coin'), String(rw.coins)));
+      for (const k of BOOSTERS) if (rw[k]) items.append(h('span', { class: 'item' }, icon(BOOSTER_ICON[k]), `×${rw[k]}`));
+      const state = i < st.claimed ? ' claimed' : i === st.today ? ' today' : '';
+      grid.append(
+        h(
+          'div',
+          { class: `reward-day${state}${i === DAILY_REWARDS.length - 1 ? ' big' : ''}` },
+          h('b', { text: t('day', { n: i + 1 }) }),
+          items,
+          i < st.claimed ? h('span', { class: 'tick' }, icon('check')) : null,
+        ),
+      );
+    });
+
+    const actions = h('div', { class: 'actions' });
+    if (st.canClaim) {
+      if (this.ads.rewardedReady()) {
+        const dbl = h('button', { class: 'btn orange' }, icon('ad'), h('span', { text: t('claimDouble') }));
+        dbl.addEventListener('click', async () => {
+          if (this.busy) return;
+          this.busy = true;
+          const ok = await this.withAd(() => this.ads.rewarded('daily_reward_x2'));
+          this.busy = false;
+          if (ok) this.claimReward(2);
+        });
+        actions.append(dbl);
+      }
+      const claim = h('button', { class: 'btn green' }, icon('gift'), h('span', { text: t('claim') }));
+      claim.addEventListener('click', () => this.claimReward(1));
+      actions.append(claim);
+    } else {
+      const close = h('button', { class: 'btn ghost', text: t('close') });
+      close.addEventListener('click', () => this.closeModal());
+      actions.append(close);
+    }
+    this.openModal(
+      h('div', { class: 'card' }, h('h2', { text: t('dailyReward') }), st.canClaim ? '' : h('p', { text: t('comeBack') }), grid, actions),
+      () => this.closeModal(),
+    );
+  }
+
+  private claimReward(multiplier: number): void {
+    const got = claimDailyReward(this.profile, dateKey(), multiplier);
+    if (!got) return;
+    this.saveProfile();
+    track('daily_reward', { day: this.profile.reward.day || 7, multiplier });
+    sfx.reward();
+    haptic('success');
+    this.closeModal();
+    if (this.screen === 'home') {
+      this.renderHome();
+      const pill = $('home').querySelector('.coin-pill');
+      if (pill) this.bump(pill as HTMLElement);
+    } else {
+      this.updateHud();
+    }
+  }
+
+  private showSkins(): void {
+    const p = this.profile;
+    const list = h('div', { class: 'skin-list' });
+    for (const skin of SKINS) {
+      const owned = p.skins.owned.includes(skin.id);
+      const active = p.skins.active === skin.id;
+      let btn: HTMLButtonElement;
+      if (active) {
+        btn = h('button', { class: 'btn ghost', text: t('selected') });
+        btn.setAttribute('disabled', '');
+      } else if (owned) {
+        btn = h('button', { class: 'btn', text: t('select') });
+        btn.addEventListener('click', () => this.applySkin(skin));
+      } else {
+        btn = h('button', { class: 'btn green' }, h('span', { class: 'price' }, icon('coin'), formatNumber(skin.price)));
+        if (p.coins < skin.price) btn.setAttribute('disabled', '');
+        btn.addEventListener('click', () => {
+          if (p.coins < skin.price || p.skins.owned.includes(skin.id)) return;
+          p.coins -= skin.price;
+          p.skins.owned.push(skin.id);
+          track('skin_bought', { skin: skin.id, price: skin.price });
+          sfx.reward();
+          this.applySkin(skin);
+        });
+      }
+      list.append(h('div', { class: `skin-card${active ? ' active' : ''}` }, this.skinPreview(skin), h('b', { text: t(skin.name) }), btn));
+    }
+    const close = h('button', { class: 'btn ghost', text: t('close') });
+    close.addEventListener('click', () => this.closeModal());
+    const balance = h('div', { class: 'coin-pill' }, icon('coin'), h('span', { text: formatNumber(p.coins) }));
+    this.openModal(
+      h('div', { class: 'card' }, h('h2', { text: t('skins') }), balance, list, h('div', { class: 'actions' }, close)),
+      () => this.closeModal(),
+    );
+  }
+
+  private applySkin(skin: Skin): void {
+    this.profile.skins.active = skin.id;
+    this.saveProfile();
+    this.renderer.sprites.setSkin(skin);
+    this.renderer.invalidate();
+    if (this.screen === 'home') this.renderHome();
+    this.showSkins(); // refresh the dialog
+  }
+
+  /** Small canvas showing all six block colours in the given style. */
+  private skinPreview(skin: Skin): HTMLCanvasElement {
+    const size = 26;
+    const cols = 3;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const cv = h('canvas', { class: 'skin-preview' });
+    cv.width = cols * size * dpr;
+    cv.height = 2 * size * dpr;
+    cv.style.width = `${cols * size}px`;
+    cv.style.height = `${2 * size}px`;
+    const sprites = new SpriteCache();
+    sprites.dpr = dpr;
+    sprites.setSkin(skin);
+    const ctx = cv.getContext('2d');
+    if (!ctx) return cv;
+    ctx.scale(dpr, dpr);
+    for (let i = 0; i < 6; i++) {
+      ctx.drawImage(sprites.get(i + 1, size - 2), (i % cols) * size + 1, Math.floor(i / cols) * size + 1, size - 2, size - 2);
+    }
+    return cv;
   }
 
   // ================================================================== pause & settings

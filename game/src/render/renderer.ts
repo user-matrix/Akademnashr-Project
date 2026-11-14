@@ -3,7 +3,7 @@ import type { ClearedCell, Game, PlaceResult } from '../core/game';
 import { Special, type Piece } from '../core/generator';
 import { geomOf } from '../core/shapes';
 import { Effects, ease } from './effects';
-import { BLOCK_COLORS, SpriteCache, THEME, roundRect } from './theme';
+import { SpriteCache, THEME, roundRect } from './theme';
 
 const N = BOARD_SIZE;
 
@@ -453,7 +453,7 @@ export class Renderer {
       const dist = Math.hypot(x + s / 2 - ox, y + s / 2 - oy) / L.cell;
       const delay = Math.min(dist * 28, 260);
       const sprite = this.sprites.get(cc.color, s, cc.special);
-      const color = BLOCK_COLORS[cc.color];
+      const color = this.sprites.colorOf(cc.color);
       let burst = false;
       this.fx.add({
         layer: 'under',

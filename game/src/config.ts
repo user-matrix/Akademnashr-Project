@@ -2,7 +2,7 @@
 // (or later driven by Remote Config) without touching game logic.
 
 export const APP_NAME = 'Block Nova';
-export const APP_VERSION = '0.1.0';
+export const APP_VERSION = '0.2.0';
 
 export const BOARD_SIZE = 8;
 

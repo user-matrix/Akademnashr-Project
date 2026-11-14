@@ -17,8 +17,11 @@ function patchAndroid() {
   let xml = readFileSync(file, 'utf8');
   const meta = `<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="${cfg.admobAppIdAndroid}" />`;
   const metaRe = /<meta-data\s+android:name="com\.google\.android\.gms\.ads\.APPLICATION_ID"[^>]*\/>/;
-  if (metaRe.test(xml)) xml = xml.replace(metaRe, meta);
-  else xml = xml.replace(/(<application[^>]*>)/, `$1\n\n        ${meta}`);
+  const existing = xml.match(metaRe);
+  if (existing) {
+    // Only rewrite when the value differs, so re-runs don't churn formatting in git.
+    if (!existing[0].includes(`"${cfg.admobAppIdAndroid}"`)) xml = xml.replace(metaRe, meta);
+  } else xml = xml.replace(/(<application[^>]*>)/, `$1\n\n        ${meta}`);
   if (!/android:screenOrientation=/.test(xml)) {
     xml = xml.replace(/android:name="\.MainActivity"/, 'android:name=".MainActivity"\n            android:screenOrientation="portrait"');
   }
